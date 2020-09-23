@@ -122,6 +122,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  // 创建并插入元素节点
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -211,6 +212,7 @@ export function createPatchFunction (backend) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
+      // 执行componentVNodeHooks中的init钩子函数
       if (isDef(i = i.hook) && isDef(i = i.init)) {
         i(vnode, false /* hydrating */)
       }
@@ -344,6 +346,7 @@ export function createPatchFunction (backend) {
     }
   }
 
+  // 循环递归销毁虚拟dom
   function invokeDestroyHook (vnode) {
     let i, j
     const data = vnode.data
@@ -698,6 +701,7 @@ export function createPatchFunction (backend) {
   }
 
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
+    // 如果没有新的vnode，有旧有的vnode，直接销毁整个vnode
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
       return
@@ -705,7 +709,7 @@ export function createPatchFunction (backend) {
 
     let isInitialPatch = false
     const insertedVnodeQueue = []
-
+    // 如果没有旧的vnode，表示是新的节点
     if (isUndef(oldVnode)) {
       // empty mount (likely as component), create new root element
       isInitialPatch = true

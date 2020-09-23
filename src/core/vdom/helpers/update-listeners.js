@@ -74,6 +74,7 @@ export function updateListeners (
         vm
       )
     } else if (isUndef(old)) {
+      // 新的事件
       if (isUndef(cur.fns)) {
         cur = on[name] = createFnInvoker(cur, vm)
       }
@@ -82,6 +83,7 @@ export function updateListeners (
       }
       add(event.name, cur, event.capture, event.passive, event.params)
     } else if (cur !== old) {
+      // 判断当前事件函数和旧的事件函数是否一致，如果不一致，则替换
       old.fns = cur
       on[name] = old
     }
