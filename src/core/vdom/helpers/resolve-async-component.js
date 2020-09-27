@@ -44,6 +44,7 @@ export function resolveAsyncComponent (
   factory: Function,
   baseCtor: Class<Component>
 ): Class<Component> | void {
+  // 高级异步组件，组件加载失败，且配置了errorComp时，执行加失败的组件
   if (isTrue(factory.error) && isDef(factory.errorComp)) {
     return factory.errorComp
   }
@@ -57,7 +58,7 @@ export function resolveAsyncComponent (
     // already pending
     factory.owners.push(owner)
   }
-
+// 高级异步组件，loading为true，且配置了loadingComp
   if (isTrue(factory.loading) && isDef(factory.loadingComp)) {
     return factory.loadingComp
   }
@@ -111,6 +112,10 @@ export function resolveAsyncComponent (
       }
     })
 
+    //1、如果是普通异步组件，执行factory工厂函数以后，那么会调用require(xxx)去加载对应的组件js。并把resolve给require第二个参数。等js加载完毕后，resolve方法会执行。那么就会给factory上增加一个resolved函数
+    // 刚好在resolveAsyncComponent函数结尾，会返回factory.resolved函数，这样就形成一个闭环调用。
+    //2、如果是promise异步组件，这个时候会返回一个promise对象，将要执行以下代码。res.then(resolve, reject).后面执行和1保持一致。
+    // 3、高级异步组件执行逻辑很简单。
     const res = factory(resolve, reject)
 
     if (isObject(res)) {

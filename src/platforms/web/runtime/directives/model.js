@@ -34,7 +34,9 @@ const directive = {
     } else if (vnode.tag === 'textarea' || isTextInputType(el.type)) {
       el._vModifiers = binding.modifiers
       if (!binding.modifiers.lazy) {
+        // 当用户使用拼音输入法开始输入汉字时，这个事件就会被触发
         el.addEventListener('compositionstart', onCompositionStart)
+        // 具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议
         el.addEventListener('compositionend', onCompositionEnd)
         // Safari < 10.2 & UIWebView doesn't fire compositionend when
         // switching focus before confirming composition choice

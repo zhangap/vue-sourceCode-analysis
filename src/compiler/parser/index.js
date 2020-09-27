@@ -81,7 +81,7 @@ export function parse (
   options: CompilerOptions
 ): ASTElement | void {
   warn = options.warn || baseWarn
-
+// 根据options获取相关的配置属性和方法
   platformIsPreTag = options.isPreTag || no
   platformMustUseProp = options.mustUseProp || no
   platformGetTagNamespace = options.getTagNamespace || no
@@ -220,7 +220,7 @@ export function parse (
       if (isIE && ns === 'svg') {
         attrs = guardIESVGBug(attrs)
       }
-
+      // 创建AST元素
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
       if (ns) {
         element.ns = ns
@@ -248,7 +248,7 @@ export function parse (
           }
         })
       }
-
+      // 不能创建style和script相关标签
       if (isForbiddenTag(element) && !isServerRendering()) {
         element.forbidden = true
         process.env.NODE_ENV !== 'production' && warn(

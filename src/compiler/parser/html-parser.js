@@ -61,13 +61,15 @@ export function parseHTML (html, options) {
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
+    // 确保不是在script,style,textarea标签内
     if (!lastTag || !isPlainTextElement(lastTag)) {
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
-        // Comment:
+        // Comment: 注释节点
         if (comment.test(html)) {
           const commentEnd = html.indexOf('-->')
 
+          // 是否要保留注释节点，如果要保留的话，调用options.comment方法生成注释AST语法树
           if (commentEnd >= 0) {
             if (options.shouldKeepComment) {
               options.comment(html.substring(4, commentEnd), index, index + commentEnd + 3)
@@ -78,6 +80,7 @@ export function parseHTML (html, options) {
         }
 
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
+        // 判断是否是提交注释，条件注释不会解析成AST语法树
         if (conditionalComment.test(html)) {
           const conditionalEnd = html.indexOf(']>')
 
@@ -114,9 +117,11 @@ export function parseHTML (html, options) {
         }
       }
 
+    // 文本节点（找到真正文本节点的长度）
       let text, rest, next
       if (textEnd >= 0) {
         rest = html.slice(textEnd)
+        // 判断是否是纯文本节点
         while (
           !endTag.test(rest) &&
           !startTagOpen.test(rest) &&
@@ -179,12 +184,15 @@ export function parseHTML (html, options) {
   // Clean up any remaining tags
   parseEndTag()
 
+  // 把解析的起始点和解析的html字符串重新往后推进
   function advance (n) {
     index += n
     html = html.substring(n)
   }
 
+  // 分析查找开始节点
   function parseStartTag () {
+    // 匹配开始标签
     const start = html.match(startTagOpen)
     if (start) {
       const match = {
@@ -192,14 +200,17 @@ export function parseHTML (html, options) {
         attrs: [],
         start: index
       }
+      // 推进位置
       advance(start[0].length)
       let end, attr
+      // 循环查找开始标签上的属性，直到匹配到结束标签
       while (!(end = html.match(startTagClose)) && (attr = html.match(dynamicArgAttribute) || html.match(attribute))) {
         attr.start = index
         advance(attr[0].length)
         attr.end = index
         match.attrs.push(attr)
       }
+      // 非斜杠标签
       if (end) {
         match.unarySlash = end[1]
         advance(end[0].length)
@@ -209,6 +220,7 @@ export function parseHTML (html, options) {
     }
   }
 
+  // 处理开始标签
   function handleStartTag (match) {
     const tagName = match.tagName
     const unarySlash = match.unarySlash
@@ -228,6 +240,10 @@ export function parseHTML (html, options) {
     const attrs = new Array(l)
     for (let i = 0; i < l; i++) {
       const args = match.attrs[i]
+      // 属性的编写，可以写双引号，可以写单引号，也可以不写，那么对应的正则匹配的属性值，会是以下情况
+      //   ["data-prop="111"", "data-prop", "=", "111", undefined, undefined, index: 0, input: "data-prop="111"", groups: undefined]
+      //   ["data-prop='111'", "data-prop", "=", undefined, "111", undefined, index: 0, input: "data-prop='111'", groups: undefined]
+      //   ["data-prop=111", "data-prop", "=", undefined, undefined, "111", index: 0, input: "data-prop=111", groups: undefined]
       const value = args[3] || args[4] || args[5] || ''
       const shouldDecodeNewlines = tagName === 'a' && args[1] === 'href'
         ? options.shouldDecodeNewlinesForHref
@@ -241,7 +257,7 @@ export function parseHTML (html, options) {
         attrs[i].end = args.end
       }
     }
-
+  // 非一元标签
     if (!unary) {
       stack.push({ tag: tagName, lowerCasedTag: tagName.toLowerCase(), attrs: attrs, start: match.start, end: match.end })
       lastTag = tagName
@@ -258,6 +274,7 @@ export function parseHTML (html, options) {
     if (end == null) end = index
 
     // Find the closest opened tag of the same type
+    // 根据闭合标签的标签名，倒序从stack中去查找匹配开始标签的位置
     if (tagName) {
       lowerCasedTagName = tagName.toLowerCase()
       for (pos = stack.length - 1; pos >= 0; pos--) {
@@ -272,6 +289,7 @@ export function parseHTML (html, options) {
 
     if (pos >= 0) {
       // Close all the open elements, up the stack
+      // 正常情况下，pos的位置就是stack最后的一个值，所以这里只会循环一次，但是也不排除有 <div><span></div>这种情况，那么在非生产环境下，会给予相应的提示
       for (let i = stack.length - 1; i >= pos; i--) {
         if (process.env.NODE_ENV !== 'production' &&
           (i > pos || !tagName) &&
@@ -288,6 +306,7 @@ export function parseHTML (html, options) {
       }
 
       // Remove the open elements from the stack
+      // 匹配完毕以后，会把stack的大小减去1个（通过pos来控制）
       stack.length = pos
       lastTag = pos && stack[pos - 1].tag
     } else if (lowerCasedTagName === 'br') {
