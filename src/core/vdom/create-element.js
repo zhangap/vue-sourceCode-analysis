@@ -62,6 +62,7 @@ export function _createElement (
     return createEmptyVNode()
   }
   // object syntax in v-bind
+  // 动态组件 <component :is='xxx'/>
   if (isDef(data) && isDef(data.is)) {
     tag = data.is
   }
@@ -82,6 +83,7 @@ export function _createElement (
     }
   }
   // support single function children as default scoped slot
+  // 支持将单个函数子项作为默认作用域插槽
   if (Array.isArray(children) &&
     typeof children[0] === 'function'
   ) {
@@ -113,6 +115,7 @@ export function _createElement (
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
       )
+      // 判断是否是定义的子组件： components: {someComp} 模板中使用<some-comp></some-comp>
     } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
       // component
       vnode = createComponent(Ctor, data, context, children, tag)
@@ -126,12 +129,14 @@ export function _createElement (
       )
     }
   } else {
+    // 直接组件选项/构造函数
     // direct component options / constructor
     vnode = createComponent(tag, data, context, children)
   }
   if (Array.isArray(vnode)) {
     return vnode
   } else if (isDef(vnode)) {
+    // 添加命名空间
     if (isDef(ns)) applyNS(vnode, ns)
     if (isDef(data)) registerDeepBindings(data)
     return vnode
@@ -161,6 +166,7 @@ function applyNS (vnode, ns, force) {
 // ref #5318
 // necessary to ensure parent re-render when deep bindings like :style and
 // :class are used on slot nodes
+// 在插槽节点上使用诸如：style和：class之类的深度绑定时，确保父级重新呈现是必需的
 function registerDeepBindings (data) {
   if (isObject(data.style)) {
     traverse(data.style)

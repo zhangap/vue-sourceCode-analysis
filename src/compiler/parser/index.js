@@ -21,7 +21,9 @@ import {
   getAndRemoveAttrByRegex
 } from '../helpers'
 
+// 匹配事件绑定<button @click='clickHandle' v-on:click='clickHandle'>
 export const onRE = /^@|^v-on:/
+// 匹配指令
 export const dirRE = process.env.VBIND_PROP_SHORTHAND
   ? /^v-|^@|^:|^\.|^#/
   : /^v-|^@|^:|^#/
@@ -761,10 +763,12 @@ function processAttrs (el) {
   for (i = 0, l = list.length; i < l; i++) {
     name = rawName = list[i].name
     value = list[i].value
+    // 判断是否是指令
     if (dirRE.test(name)) {
       // mark element as dynamic
       el.hasBindings = true
       // modifiers
+      // 解析出修饰符
       modifiers = parseModifiers(name.replace(dirRE, ''))
       // support .foo shorthand syntax for the .prop modifier
       if (process.env.VBIND_PROP_SHORTHAND && propBindRE.test(name)) {

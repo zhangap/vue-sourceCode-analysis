@@ -1,5 +1,13 @@
 /* not type checking this file because flow doesn't play well with Proxy */
 
+/**
+ * initProxy的作用：
+ * 1、在环境中支持Proxy对象的时候，给vm._renderProxy增加了一个代理（其中_renderProxy是在render.js中使用）；如果不支持Proxy，则直接设置vm._renderProxy=vm
+ * 2、代理的作用：主要用于在开发阶段，对render函数中对vm实例上属性访问的一个校验
+ * 校验内容：
+ *  校验render中是否引用了vm上不存在的数据或非特许的数据
+ *  校验自定义的快捷键名是否和Vue内置的快捷键修饰符重名
+ */
 import config from 'core/config'
 import { warn, makeMap, isNative } from '../util/index'
 
@@ -24,6 +32,7 @@ if (process.env.NODE_ENV !== 'production') {
     )
   }
 
+  // 以$和_的属性不会被代理到vue实例上，是为了避免和Vue内部定义的属性冲突，对于自己定义的以$或者是_开头的属性，只能用$data.key的形式来访问
   const warnReservedPrefix = (target, key) => {
     warn(
       `Property "${key}" must be accessed with "$data.${key}" because ` +
@@ -36,6 +45,19 @@ if (process.env.NODE_ENV !== 'production') {
 
   const hasProxy =
     typeof Proxy !== 'undefined' && isNative(Proxy)
+
+  /**
+   *vue提供了通过Vue.config来定义config.keyCodes,然后在模板中直接使用修饰符的语法糖，如：
+   * Vue.config.keyCodes = {
+      f1 : 112,
+      'arrow-up' : [38, 87],  // kebab-case instead of camelCase
+    };
+
+       // 调用
+       @keyup.f1="handleF1"
+       @keydown.arrow-up="handleArrowUp"
+   下面代码就是为了校验自定义的修饰符是否覆盖了Vue内置的修饰符
+   */
 
   if (hasProxy) {
     const isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta,exact')
@@ -52,6 +74,7 @@ if (process.env.NODE_ENV !== 'production') {
     })
   }
 
+  // 枚举属性时做校验
   const hasHandler = {
     has (target, key) {
       const has = key in target
@@ -65,6 +88,7 @@ if (process.env.NODE_ENV !== 'production') {
     }
   }
 
+  // 判断从vue实例上访问属性时，做校验
   const getHandler = {
     get (target, key) {
       if (typeof key === 'string' && !(key in target)) {

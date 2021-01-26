@@ -33,6 +33,7 @@ import {
 } from 'weex/runtime/recycle-list/render-component-template'
 
 // inline hooks to be invoked on component VNodes during patch
+// 内联钩子函数
 const componentVNodeHooks = {
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     if (
@@ -108,7 +109,7 @@ export function createComponent (
   if (isUndef(Ctor)) {
     return
   }
-
+// 这里的baseCtor就是Vue对象， _base在initGlobalApi中加入到options上的
   const baseCtor = context.$options._base
 
   // plain options object: turn it into a constructor
@@ -126,13 +127,17 @@ export function createComponent (
   }
 
   // async component
+  // 异步组件
   let asyncFactory
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
     Ctor = resolveAsyncComponent(asyncFactory, baseCtor)
     if (Ctor === undefined) {
+      // 返回异步组件的占位符节点，该节点将被呈现
       // return a placeholder node for async component, which is rendered
+      // 作为注释节点，但保留该节点的所有原始信息
       // as a comment node but preserves all the raw information for the node.
+      // 这些信息将用于异步服务器呈现和同步
       // the information will be used for async server-rendering and hydration.
       return createAsyncPlaceholder(
         asyncFactory,
@@ -148,6 +153,7 @@ export function createComponent (
 
   // resolve constructor options in case global mixins are applied after
   // component constructor creation
+  // 在组件构造函数创建以后，解析的构造函数的属性将被全局应用
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
@@ -222,14 +228,16 @@ export function createComponentInstanceForVnode (
   }
   return new vnode.componentOptions.Ctor(options)
 }
-
+// 安装组件钩子函数
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {
+    // init prepatch insert destroy
     const key = hooksToMerge[i]
     const existing = hooks[key]
     const toMerge = componentVNodeHooks[key]
     if (existing !== toMerge && !(existing && existing._merged)) {
+      // 合并同名钩子函数
       hooks[key] = existing ? mergeHook(toMerge, existing) : toMerge
     }
   }

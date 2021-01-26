@@ -33,6 +33,7 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
+  // 定位到第一个非抽象的父节点，把当前vm实例添加到该父节点的$children属性中
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
@@ -138,6 +139,13 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+/**
+ * 挂载组件
+ * @param vm
+ * @param el
+ * @param hydrating
+ * @returns {Component}
+ */
 export function mountComponent (
   vm: Component,
   el: ?Element,

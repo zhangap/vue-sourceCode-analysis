@@ -22,6 +22,7 @@ Vue.prototype.$mount = function (
   el = el && query(el)
 
   /* istanbul ignore if */
+  // 不能把vue实例挂载在html或body元素上，因为被挂载的元素会被替代，但是在整个dom树中，html和body是不能被替代的
   if (el === document.body || el === document.documentElement) {
     process.env.NODE_ENV !== 'production' && warn(
       `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
@@ -31,6 +32,7 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 把template模板或者是el指定的html转换为render函数
   if (!options.render) {
     let template = options.template
     if (template) {

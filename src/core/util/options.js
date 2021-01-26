@@ -420,6 +420,7 @@ export function mergeOptions (
   const options = {}
   let key
   for (key in parent) {
+    // 根据key获取不同的合并策略进行合并
     mergeField(key)
   }
   for (key in child) {
@@ -438,6 +439,7 @@ export function mergeOptions (
  * Resolve an asset.
  * This function is used because child instances need access
  * to assets defined in its ancestor chain.
+ * 使用此函数是因为子实例需要访问其祖先链中定义的资产
  */
 export function resolveAsset (
   options: Object,
@@ -451,9 +453,12 @@ export function resolveAsset (
   }
   const assets = options[type]
   // check local registration variations first
+  // 先检查本地是否注册了此组件，如果注册，直接返回
   if (hasOwn(assets, id)) return assets[id]
+  // id格式化，转换为驼峰形式再去本地查找
   const camelizedId = camelize(id)
   if (hasOwn(assets, camelizedId)) return assets[camelizedId]
+  // 再次格式化id 转换为首字母大写的形式
   const PascalCaseId = capitalize(camelizedId)
   if (hasOwn(assets, PascalCaseId)) return assets[PascalCaseId]
   // fallback to prototype chain

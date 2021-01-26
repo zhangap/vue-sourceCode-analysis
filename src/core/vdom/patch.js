@@ -211,6 +211,7 @@ export function createPatchFunction (backend) {
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
+      // 首次进来，vnode.componentInstance为undefined
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
       // 执行componentVNodeHooks中的init钩子函数
       if (isDef(i = i.hook) && isDef(i = i.init)) {
@@ -220,6 +221,7 @@ export function createPatchFunction (backend) {
       // it should've created a child instance and mounted it. the child
       // component also has set the placeholder vnode's elm.
       // in that case we can just return the element and be done.
+      // 上面的init函数执行完毕以后，vnode.componentInstance就不是undefined了
       if (isDef(vnode.componentInstance)) {
         initComponent(vnode, insertedVnodeQueue)
         insert(parentElm, vnode.elm, refElm)

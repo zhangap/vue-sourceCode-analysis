@@ -27,12 +27,14 @@ export function initMixin (Vue: Class<Component>) {
     }
 
     // a flag to avoid this being observed
+    // 避免vue实例被观测
     vm._isVue = true
     // merge options
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
+      // vue内部组件
       initInternalComponent(vm, options)
     } else {
       vm.$options = mergeOptions(
@@ -71,6 +73,7 @@ export function initMixin (Vue: Class<Component>) {
   }
 }
 
+// 内部组件
 export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
@@ -90,11 +93,13 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
+// 解析构造函数的options
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions
+    // 如果缓存的superOptions和当前的superOptions不同，说明父组件的options已经发生了变化，那么就需要把变化项找出来，合并到当前组件的配置项中
     if (superOptions !== cachedSuperOptions) {
       // super option changed,
       // need to resolve new options.
@@ -114,6 +119,7 @@ export function resolveConstructorOptions (Ctor: Class<Component>) {
   return options
 }
 
+// 解析有调整的配置项
 function resolveModifiedOptions (Ctor: Class<Component>): ?Object {
   let modified
   const latest = Ctor.options

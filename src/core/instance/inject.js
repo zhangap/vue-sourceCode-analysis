@@ -4,6 +4,7 @@ import { hasOwn } from 'shared/util'
 import { warn, hasSymbol } from '../util/index'
 import { defineReactive, toggleObserving } from '../observer/index'
 
+// provide可以是函数，也可以是某个对象
 export function initProvide (vm: Component) {
   const provide = vm.$options.provide
   if (provide) {
@@ -50,6 +51,7 @@ export function resolveInject (inject: any, vm: Component): ?Object {
       if (key === '__ob__') continue
       const provideKey = inject[key].from
       let source = vm
+      // 递归向上查找inject中定义的provider（from的属性值）
       while (source) {
         if (source._provided && hasOwn(source._provided, provideKey)) {
           result[key] = source._provided[provideKey]
@@ -57,6 +59,8 @@ export function resolveInject (inject: any, vm: Component): ?Object {
         }
         source = source.$parent
       }
+      // 如果没有找到，则判断是否定义了default（容错处理，如果某个vue子组件可以同时在两个不同的父组件中使用，其中一个定义了provide，
+      // 另外一个没有定义，此时子组件中就可以定义default值，避免出错）
       if (!source) {
         if ('default' in inject[key]) {
           const provideDefault = inject[key].default

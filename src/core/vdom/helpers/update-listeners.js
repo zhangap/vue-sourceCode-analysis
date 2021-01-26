@@ -68,6 +68,7 @@ export function updateListeners (
       cur = def.handler
       event.params = def.params
     }
+    // 如果只定义了事件，没有定义事件执行方法，在非生产环境下，警告
     if (isUndef(cur)) {
       process.env.NODE_ENV !== 'production' && warn(
         `Invalid handler for event "${event.name}": got ` + String(cur),
@@ -78,6 +79,7 @@ export function updateListeners (
       if (isUndef(cur.fns)) {
         cur = on[name] = createFnInvoker(cur, vm)
       }
+      // 单次执行函数，调用createOnceHandler方法，生成一个新的handler，一旦被被调用，即主动销毁该注册事件
       if (isTrue(event.once)) {
         cur = on[name] = createOnceHandler(event.name, cur, event.capture)
       }
@@ -88,6 +90,7 @@ export function updateListeners (
       on[name] = old
     }
   }
+  // 父组件附件的$listeners事件，如果在子组件中没有被定义，直接移除
   for (name in oldOn) {
     if (isUndef(on[name])) {
       event = normalizeEvent(name)

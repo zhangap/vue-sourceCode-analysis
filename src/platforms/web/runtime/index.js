@@ -20,6 +20,7 @@ import platformDirectives from './directives/index'
 import platformComponents from './components/index'
 
 // install platform specific utils
+// 安装特定平台上的工具方法
 Vue.config.mustUseProp = mustUseProp
 Vue.config.isReservedTag = isReservedTag
 Vue.config.isReservedAttr = isReservedAttr
@@ -27,6 +28,7 @@ Vue.config.getTagNamespace = getTagNamespace
 Vue.config.isUnknownElement = isUnknownElement
 
 // install platform runtime directives & components
+// 安装平台运行时的指令和组件
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
