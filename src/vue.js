@@ -2,6 +2,8 @@
  * Vue.js v2.6.11
  * (c) 2014-2020 Evan You
  * Released under the MIT License.
+ * 用来分析源码
+ *
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -3616,10 +3618,21 @@
     return node
   }
 
+  /**
+   * 解析异步组件
+   * @param factory
+   * @param baseCtor
+   * @returns {*}
+   * 三种异步组件：
+   * 1、普通函数异步组件
+   * 2、Promise异步组件
+   * 3、高级异步组件
+   */
   function resolveAsyncComponent (
     factory,
     baseCtor
   ) {
+    // 高级异步组件，配置了出错时渲染组件、loading时渲染组件
     if (isTrue(factory.error) && isDef(factory.errorComp)) {
       return factory.errorComp
     }
@@ -3628,7 +3641,9 @@
       return factory.resolved
     }
 
+    // 在执行_render函数时，把当前的vm赋值给currentRenderingInstance变量，记录当前正在渲染的实例
     var owner = currentRenderingInstance;
+    // 把当前的渲染实例添加到工厂函数的owners数组中
     if (owner && isDef(factory.owners) && factory.owners.indexOf(owner) === -1) {
       // already pending
       factory.owners.push(owner);
@@ -3644,6 +3659,7 @@
       var timerLoading = null;
       var timerTimeout = null
 
+      // 订阅当前渲染组件的destroyed函数，组件销毁时，从工厂函数中的owners中移除组件实例
       ;(owner).$on('hook:destroyed', function () { return remove(owners, owner); });
 
       var forceRender = function (renderCompleted) {
