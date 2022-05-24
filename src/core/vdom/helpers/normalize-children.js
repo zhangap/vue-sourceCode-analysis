@@ -3,18 +3,12 @@
 import VNode, { createTextVNode } from 'core/vdom/vnode'
 import { isFalse, isTrue, isDef, isUndef, isPrimitive } from 'shared/util'
 
-// The template compiler attempts to minimize the need for normalization by
-// statically analyzing the template at compile time.
-//
-// For plain HTML markup, normalization can be completely skipped because the
-// generated render function is guaranteed to return Array<VNode>. There are
-// two cases where extra normalization is needed:
 
-// 1. When the children contains components - because a functional component
-// may return an Array instead of a single root. In this case, just a simple
-// normalization is needed - if any child is an Array, we flatten the whole
-// thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
-// because functional components already normalize their own children.
+// 模板编译器试图通过在编译时静态分析模板来最小化规范化的需要。
+// 对于普通的HTML标记，规范化可以完全跳过，因为生成的渲染函数保证返回Array<VNode>。有两种情况需要额外的规范化:
+
+//1。当子组件包含组件时-因为函数组件可能返回一个Array而不是单个根。在这种情况下，只需要一个简单的规范化——如果任何子数组是一个Array，
+// 我们就用Array.prototype.concat来简化整个过程。它可以保证只有1级深度，因为功能组件已经规范化了它们自己的子组件。
 export function simpleNormalizeChildren (children: any) {
   for (let i = 0; i < children.length; i++) {
     if (Array.isArray(children[i])) {
@@ -24,10 +18,8 @@ export function simpleNormalizeChildren (children: any) {
   return children
 }
 
-// 2. When the children contains constructs that always generated nested Arrays,
-// e.g. <template>, <slot>, v-for, or when the children is provided by user
-// with hand-written render functions / JSX. In such cases a full normalization
-// is needed to cater to all possible types of children values.
+// 2. 当子进程包含总是生成嵌套数组的结构时，例如<template>， <slot>， v-for，或者当用户用手写的渲染函数/ JSX提供子进程时。
+// 在这种情况下，需要完全的规范化来满足所有可能类型的子值。
 export function normalizeChildren (children: any): ?Array<VNode> {
   return isPrimitive(children)
     ? [createTextVNode(children)]

@@ -14,6 +14,7 @@ function Vue (options) {
   this._init(options)
 }
 
+// 以下mixin方法都是在在Vue.prototype原型链上添加对应的方法
 initMixin(Vue)
 stateMixin(Vue)
 eventsMixin(Vue)

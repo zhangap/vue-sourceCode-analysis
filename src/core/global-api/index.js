@@ -52,12 +52,14 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   }
 
   Vue.options = Object.create(null)
+  // 在options上声明了components、directives和filters是哪个属性，用来存放组件内部引用的组件、定义的指令和管道函数
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
 
   // this is used to identify the "base" constructor to extend all plain-object
   // components with in Weex's multi-instance scenarios.
+  //用于标识在Weex的多实例场景中扩展所有普通对象组件的“基”构造函数。
   Vue.options._base = Vue
 
   extend(Vue.options.components, builtInComponents)

@@ -25,6 +25,7 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
+// 包装器函数，提供更灵活的接口
 export function createElement (
   context: Component,
   tag: any,
@@ -52,7 +53,7 @@ export function _createElement (
   children?: any,
   normalizationType?: number
 ): VNode | Array<VNode> {
-  // 不能使用响应式数据作为虚拟dom的数据
+  // 不能使用响应式数据作为虚拟dom的数据，否则创建一个空的注释节点VNode
   if (isDef(data) && isDef((data: any).__ob__)) {
     process.env.NODE_ENV !== 'production' && warn(
       `Avoid using observed data object as vnode data: ${JSON.stringify(data)}\n` +
@@ -66,6 +67,7 @@ export function _createElement (
   if (isDef(data) && isDef(data.is)) {
     tag = data.is
   }
+  // <component :is='设置了一个错误的vlaue值'></component>
   if (!tag) {
     // in case of component :is set to falsy value
     return createEmptyVNode()

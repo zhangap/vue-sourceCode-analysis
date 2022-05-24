@@ -66,6 +66,7 @@ function initProps (vm: Component, propsOptions: Object) {
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
+  // 缓存属性键，以便未来的属性更新可以使用数组迭代，而不是动态的对象键枚举。
   const keys = vm.$options._propKeys = []
   const isRoot = !vm.$parent
   // root instance props should be converted
@@ -77,6 +78,7 @@ function initProps (vm: Component, propsOptions: Object) {
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
+      // 对属性名进行键名转换，把驼峰式转换为连字符键名
       const hyphenatedKey = hyphenate(key)
       if (isReservedAttribute(hyphenatedKey) ||
           config.isReservedAttr(hyphenatedKey)) {
@@ -111,6 +113,7 @@ function initProps (vm: Component, propsOptions: Object) {
 
 function initData (vm: Component) {
   let data = vm.$options.data
+  // 判断data类型，data如果是根节点，是可以接收一个对象的，但是在组件开发的时候，是需要返回一个函数，防止数据交叉引用
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -143,6 +146,7 @@ function initData (vm: Component) {
         `Use prop default value instead.`,
         vm
       )
+      // 不是保留的key_和$
     } else if (!isReserved(key)) {
       proxy(vm, `_data`, key)
     }
@@ -183,7 +187,7 @@ function initComputed (vm: Component, computed: Object) {
     }
 
     if (!isSSR) {
-      // create internal watcher for the computed property.
+      // 为computed属性创建内部监视程序
       watchers[key] = new Watcher(
         vm,
         getter || noop,
@@ -195,6 +199,7 @@ function initComputed (vm: Component, computed: Object) {
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
     // at instantiation here.
+    // 组件定义的计算属性已经在组件原型上定义了。我们只需要在这里定义实例化时定义的计算属性。
     if (!(key in vm)) {
       defineComputed(vm, key, userDef)
     } else if (process.env.NODE_ENV !== 'production') {

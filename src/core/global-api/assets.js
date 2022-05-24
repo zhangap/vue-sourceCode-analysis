@@ -3,6 +3,7 @@
 import { ASSET_TYPES } from 'shared/constants'
 import { isPlainObject, validateComponentName } from '../util/index'
 
+// Vue对象上挂在component、directive和filter方法，用来全局注册组件、指令和管道函数
 export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.

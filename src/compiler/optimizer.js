@@ -23,8 +23,10 @@ export function optimize (root: ?ASTElement, options: CompilerOptions) {
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
   isPlatformReservedTag = options.isReservedTag || no
   // first pass: mark all non-static nodes.
+  // 标记所有非静态节点
   markStatic(root)
   // second pass: mark static roots.
+  // 第二步：标记静态节点
   markStaticRoots(root, false)
 }
 
@@ -97,10 +99,25 @@ function markStaticRoots (node: ASTNode, isInFor: boolean) {
   }
 }
 
+/**
+ * 判断是否是静态节点：
+ * 1、如果是文本节点，就是静态节点
+ * 2、同时满足以下条件：
+ * 节点不是动态绑定
+ * 节点上没有v-if和v-for
+ * 不是内置组件slot
+ * 不是组件（换言之就是必须要是保留标签）
+ * 节点上属性都是静态属性值
+ * 当前节点的父节点不能是带v-for的template标签
+ * @param node
+ * @returns {boolean}
+ */
 function isStatic (node: ASTNode): boolean {
+  // 属性节点
   if (node.type === 2) { // expression
     return false
   }
+  // 文本节点
   if (node.type === 3) { // text
     return true
   }

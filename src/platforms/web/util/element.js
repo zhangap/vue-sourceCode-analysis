@@ -33,10 +33,20 @@ export const isSVG = makeMap(
 
 export const isPreTag = (tag: ?string): boolean => tag === 'pre'
 
+/**
+ * 是否是保留标签
+ * @param tag
+ * @returns {*}
+ */
 export const isReservedTag = (tag: string): ?boolean => {
   return isHTMLTag(tag) || isSVG(tag)
 }
 
+/**
+ * 获取标签的命名空间
+ * @param tag
+ * @returns {string}
+ */
 export function getTagNamespace (tag: string): ?string {
   if (isSVG(tag)) {
     return 'svg'
@@ -49,6 +59,12 @@ export function getTagNamespace (tag: string): ?string {
 }
 
 const unknownElementCache = Object.create(null)
+
+/**
+ * 是否是未知标签
+ * @param tag
+ * @returns {boolean|*}
+ */
 export function isUnknownElement (tag: string): boolean {
   /* istanbul ignore if */
   if (!inBrowser) {

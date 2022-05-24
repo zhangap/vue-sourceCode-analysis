@@ -1704,6 +1704,7 @@
 
   /**
    * Assert whether a prop is valid.
+   * 断言这个属性是否是有效的
    */
   function assertProp(
     prop,
@@ -4707,7 +4708,8 @@
     var keys = vm.$options._propKeys = [];
     var isRoot = !vm.$parent;
     // root instance props should be converted
-    // 非跟实例，关闭观察的标示，子组件的prop值始终指向父组件传递过来的值，那么父组件传递的值发生变化，子组件的值跟随变化，也就会触发子组件的重新渲染，所以这个observe过程是可以省略的。对于值为对象型的默认值，在赋值默认值时，validateProp中已经对其observe了
+    // 非跟实例，关闭观察的标示，子组件的prop值始终指向父组件传递过来的值，那么父组件传递的值发生变化，子组件的值跟随变化，也就会触发子组件的重新渲染，所以这个observe过程是可以省略的。
+    // 对于值为对象型的默认值，在赋值默认值时，validateProp中已经对其observe了
     if (!isRoot) {
       toggleObserving(false);
     }
@@ -6569,7 +6571,7 @@
 
       if (isUndef(oldVnode)) {
         // empty mount (likely as component), create new root element
-        // 空的挂载（可能是组件），创建爱你一个新的根元素
+        // 空的挂载（可能是组件），创建一个新的根元素
         isInitialPatch = true;
         createElm(vnode, insertedVnodeQueue);
       } else {
@@ -11993,6 +11995,7 @@
   /*  */
 
   // check whether current browser encodes a char inside attribute values
+  // 检查当前浏览器是否在属性值中编码了一个字符
   var div;
   function getShouldDecode(href) {
     div = div || document.createElement('div');

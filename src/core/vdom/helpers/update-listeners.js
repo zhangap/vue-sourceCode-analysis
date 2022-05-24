@@ -50,6 +50,15 @@ export function createFnInvoker (fns: Function | Array<Function>, vm: ?Component
   return invoker
 }
 
+/**
+ * 更新事件
+ * @param on  listeners
+ * @param oldOn
+ * @param add
+ * @param remove
+ * @param createOnceHandler
+ * @param vm
+ */
 export function updateListeners (
   on: Object,
   oldOn: Object,
@@ -77,6 +86,7 @@ export function updateListeners (
     } else if (isUndef(old)) {
       // 新的事件
       if (isUndef(cur.fns)) {
+        // 包装一个函数调用者，对于声明周期内的任务函数，可以对错误信息做统一处理
         cur = on[name] = createFnInvoker(cur, vm)
       }
       // 单次执行函数，调用createOnceHandler方法，生成一个新的handler，一旦被被调用，即主动销毁该注册事件

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>测试自定义v-model</title>
+  <script src="../../dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <el-checkbox :check="value" :text="text" @change="changeHandle"></el-checkbox>
+  </div>
+
+</body>
+</html>
+<script>
+  Vue.component('el-checkbox',{
+    template: `<div><input type="checkbox" :checked="check" @change="$emit('change', $event.target.checked)"/>{{text}}</div>`,
+    model: {
+      prop: 'check1',
+      event:'change'
+    },
+    props: {
+      check: Boolean,
+      text:String
+    }
+  });
+
+  new Vue({
+    el: '#app',
+    data: {
+      value: true,
+      text: '你喜欢我吗?'
+    },
+    methods: {
+      changeHandle(value) {
+        console.log(value)
+      }
+    }
+  })
+</script>

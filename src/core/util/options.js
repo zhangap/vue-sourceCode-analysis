@@ -237,6 +237,7 @@ strats.watch = function (
 
 /**
  * Other object hashes.
+ * 定义合并策略
  */
 strats.props =
 strats.methods =
@@ -260,6 +261,7 @@ strats.provide = mergeDataOrFn
 
 /**
  * Default strategy.
+ * 默认合并策略
  */
 const defaultStrat = function (parentVal: any, childVal: any): any {
   return childVal === undefined
@@ -294,7 +296,13 @@ export function validateComponentName (name: string) {
 /**
  * Ensure all props option syntax are normalized into the
  * Object-based format.
+ * 确保所有属性选项语法都规范化为基于对象的格式
  */
+// 属性的两种写法
+// props: {
+//   name: String,
+// }
+// props:['name', 'age']
 function normalizeProps (options: Object, vm: ?Component) {
   const props = options.props
   if (!props) return
@@ -390,6 +398,7 @@ export function mergeOptions (
   child: Object,
   vm?: Component
 ): Object {
+  // 非生产环境下、校验组件名称
   if (process.env.NODE_ENV !== 'production') {
     checkComponents(child)
   }
@@ -402,10 +411,8 @@ export function mergeOptions (
   normalizeInject(child, vm)
   normalizeDirectives(child)
 
-  // Apply extends and mixins on the child options,
-  // but only if it is a raw options object that isn't
-  // the result of another mergeOptions call.
-  // Only merged options has the _base property.
+  // 在子选项上应用extends和mixins，但前提是它是一个原始选项对象，不是另一个mergeOptions调用的结果。只有合并的选项具有_base属性。
+  // 在initGlobalAPI()方法中，有给Vue.options._base = Vue设置_base属性
   if (!child._base) {
     if (child.extends) {
       parent = mergeOptions(parent, child.extends, vm)

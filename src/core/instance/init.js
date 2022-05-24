@@ -53,6 +53,7 @@ export function initMixin (Vue: Class<Component>) {
     vm._self = vm
     initLifecycle(vm)
     initEvents(vm)
+    // 对$attrs和$listeners做响应式处理
     initRender(vm)
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
@@ -96,7 +97,9 @@ export function initInternalComponent (vm: Component, options: InternalComponent
 // 解析构造函数的options
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
+  //这里的super是在Vue.extend函数中定义的  Sub['super'] = Super
   if (Ctor.super) {
+    // 递归解析父级组件，获取所有上级的options属性
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions
     // 如果缓存的superOptions和当前的superOptions不同，说明父组件的options已经发生了变化，那么就需要把变化项找出来，合并到当前组件的配置项中
@@ -105,6 +108,7 @@ export function resolveConstructorOptions (Ctor: Class<Component>) {
       // need to resolve new options.
       Ctor.superOptions = superOptions
       // check if there are any late-modified/attached options (#4976)
+      // 检查是否有任何最近修改/附加的选项
       const modifiedOptions = resolveModifiedOptions(Ctor)
       // update base extend options
       if (modifiedOptions) {

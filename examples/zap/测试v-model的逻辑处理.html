@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../../dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    请输入姓名: <input type="text" v-model="name">
+    <h1>{{name}}</h1>
+  </div>
+
+</body>
+</html>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        name: ''
+      }
+    }
+  })
+</script>

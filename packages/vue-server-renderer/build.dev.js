@@ -8120,6 +8120,7 @@ function createComponent (
   resolveConstructorOptions(Ctor);
 
   // transform component v-model data into props & events
+  // 将组件的v-model转换为属性和事件
   if (isDef(data.model)) {
     transformModel(Ctor.options, data);
   }

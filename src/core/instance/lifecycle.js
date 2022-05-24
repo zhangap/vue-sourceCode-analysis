@@ -29,11 +29,16 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
+/**
+ * 初始化生命周期
+ * @param vm
+ */
 export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
   // 定位到第一个非抽象的父节点，把当前vm实例添加到该父节点的$children属性中
+  // 例如被keep-alive包裹的组件，其中keep-alive就是抽象组件
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
@@ -213,6 +218,7 @@ export function mountComponent (
 
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
+  // 在其插入的钩子中，为呈现创建的子组件调用挂载在self - mounted上的手动挂载实例
   if (vm.$vnode == null) {
     vm._isMounted = true
     callHook(vm, 'mounted')

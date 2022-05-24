@@ -5,6 +5,7 @@ import { noop } from 'shared/util'
 import { handleError } from './error'
 import { isIE, isIOS, isNative } from './env'
 
+// 标记是否使用的是微任务
 export let isUsingMicroTask = false
 
 const callbacks = []

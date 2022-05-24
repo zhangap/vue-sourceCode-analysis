@@ -4,6 +4,7 @@ import type VNode from 'core/vdom/vnode'
 
 /**
  * Runtime helper for resolving raw children VNodes into a slot object.
+ * 用于将原始子vnode解析为槽对象的运行时helper
  */
 export function resolveSlots (
   children: ?Array<VNode>,
@@ -17,11 +18,13 @@ export function resolveSlots (
     const child = children[i]
     const data = child.data
     // remove slot attribute if the node is resolved as a Vue slot node
+    // 如果该节点被解析为Vue槽位节点，则删除slot属性
     if (data && data.attrs && data.attrs.slot) {
       delete data.attrs.slot
     }
     // named slots should only be respected if the vnode was rendered in the
     // same context.
+    // 如果vnode是在相同的上下文中呈现的，那么命名槽应该只遵循相同的上下文
     if ((child.context === context || child.fnContext === context) &&
       data && data.slot != null
     ) {

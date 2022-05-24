@@ -10,7 +10,7 @@ export function baseWarn (msg: string, range?: Range) {
   console.error(`[Vue compiler]: ${msg}`)
 }
 /* eslint-enable no-unused-vars */
-
+// 从options.modules属性中抽取对应的函数
 export function pluckModuleFunction<F: Function> (
   modules: ?Array<Object>,
   key: string

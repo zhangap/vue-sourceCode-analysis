@@ -81,6 +81,7 @@ export class Observer {
 // helpers
 
 /**
+ * 通过拦截来增强目标对象或数组
  * Augment a target Object or Array by intercepting
  * the prototype chain using __proto__
  */
@@ -93,6 +94,7 @@ function protoAugment (target, src: Object) {
 /**
  * Augment a target Object or Array by defining
  * hidden properties.
+ * 通过定义来增强目标对象或数组隐藏属性
  */
 /* istanbul ignore next */
 function copyAugment (target: Object, src: Object, keys: Array<string>) {
@@ -106,6 +108,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
+ * 尝试为一个值创建一个观察者实例，如果成功观察，则返回新的观察者，如果值已经有一个观察者，则返回现有的观察者
  */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
@@ -141,6 +144,7 @@ export function defineReactive (
 ) {
   const dep = new Dep()
 
+  // 获取对象上属性的描述信息，如果属性是不可配置的，就不设置为响应式
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return
@@ -153,6 +157,7 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 是否深层递归进行观测
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,

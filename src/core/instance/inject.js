@@ -37,10 +37,31 @@ export function initInjections (vm: Component) {
   }
 }
 
+/**
+ * 解析inject属性
+ * @param inject
+ * @param vm
+ * @returns {*}
+ * inject有两种方式，一种是字符串数组，一种是对象，写法如下
+ * https://cn.vuejs.org/v2/api/#provide-inject
+ */
+// inject: ['store'],
+// inject: {
+//   'st': {
+//     from: 'store',
+//   default() {
+//       return {}
+//     }
+//   },
+//   'st2': {
+//     from: 'store2'
+//   }
+// },
 export function resolveInject (inject: any, vm: Component): ?Object {
   if (inject) {
     // inject is :any because flow is not smart enough to figure out cached
     const result = Object.create(null)
+    //拿到inject属性对象上定义的属性集合
     const keys = hasSymbol
       ? Reflect.ownKeys(inject)
       : Object.keys(inject)

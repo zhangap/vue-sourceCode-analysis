@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../../dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <span>{{person.name}}</span>
+    <span>{{person.age}}</span>
+<!--    <span>{{person.address}}</span>-->
+  </div>
+</body>
+</html>
+<script>
+  new Vue({
+    el: document.getElementById('app'),
+    data() {
+      return {
+        person: {
+          name: '张三丰',
+          age: 100,
+          address: '武当山'
+        }
+      }
+    }
+  })
+
+</script>

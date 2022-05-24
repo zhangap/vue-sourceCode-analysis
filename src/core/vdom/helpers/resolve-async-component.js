@@ -112,7 +112,8 @@ export function resolveAsyncComponent (
       }
     })
 
-    //1、如果是普通异步组件，执行factory工厂函数以后，那么会调用require(xxx)去加载对应的组件js。并把resolve给require第二个参数。等js加载完毕后，resolve方法会执行。那么就会给factory上增加一个resolved函数
+    //1、如果是普通异步组件，执行factory工厂函数以后，那么会调用require(xxx)去加载对应的组件js。并把resolve给require第二个参数。
+    // 等js加载完毕后，resolve方法会执行。那么就会给factory上增加一个resolved函数
     // 刚好在resolveAsyncComponent函数结尾，会返回factory.resolved函数，这样就形成一个闭环调用。
     //2、如果是promise异步组件，这个时候会返回一个promise对象，将要执行以下代码。res.then(resolve, reject).后面执行和1保持一致。
     // 3、高级异步组件执行逻辑很简单。

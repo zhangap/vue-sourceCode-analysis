@@ -85,8 +85,10 @@ export function parse (
   warn = options.warn || baseWarn
 // 根据options获取相关的配置属性和方法
   platformIsPreTag = options.isPreTag || no
+  // 检查属性是否应该作为属性prop绑定，而不是用attrs来绑定
   platformMustUseProp = options.mustUseProp || no
   platformGetTagNamespace = options.getTagNamespace || no
+  // 是否是保留标签
   const isReservedTag = options.isReservedTag || no
   maybeComponent = (el: ASTElement) => !!el.component || !isReservedTag(el.tag)
 
@@ -172,6 +174,7 @@ export function parse (
     }
   }
 
+  // 删除尾部空格节点
   function trimEndingWhitespace (el) {
     // remove trailing whitespace node
     if (!inPre) {
@@ -212,6 +215,7 @@ export function parse (
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
+    //1、创建ast元素；2、处理ast元素；3、AST树管理
     start (tag, attrs, unary, start, end) {
       // check namespace.
       // inherit parent ns if there is one

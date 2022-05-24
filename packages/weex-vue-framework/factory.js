@@ -1616,6 +1616,7 @@ function validateProp (
     value = getPropDefaultValue(vm, prop, key);
     // since the default value is a fresh copy,
     // make sure to observe it.
+    // 默认值是一个新的副本，所以这里要做成响应式数据
     var prevShouldObserve = shouldObserve;
     toggleObserving(true);
     observe(value);

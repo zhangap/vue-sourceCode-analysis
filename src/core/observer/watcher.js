@@ -124,6 +124,7 @@ export default class Watcher {
 
   /**
    * Add a dependency to this directive.
+   * 这么设计的目的是确保同一个watcher只被同一个响应式数据收集一遍
    */
   addDep (dep: Dep) {
     const id = dep.id
@@ -179,6 +180,7 @@ export default class Watcher {
   run () {
     if (this.active) {
       const value = this.get()
+      // 深度监视器和对象/数组上的监视器应该在值不相同时触发，因为值可能已经发生了变化。
       if (
         value !== this.value ||
         // Deep watchers and watchers on Object/Arrays should fire even

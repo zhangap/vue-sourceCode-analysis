@@ -4,8 +4,10 @@ import { makeMap } from 'shared/util'
 
 // these are reserved for web because they are directly compiled away
 // during template compilation
+// 这些是为web保留的的属性，因为他们在模板编译期间直接编译掉了
 export const isReservedAttr = makeMap('style,class')
 
+// 某些特定的标签还是要特定的属性来绑定
 // attributes that should be using props for binding
 const acceptValue = makeMap('input,textarea,option,select,progress')
 export const mustUseProp = (tag: string, type: ?string, attr: string): boolean => {

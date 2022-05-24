@@ -98,7 +98,7 @@ const componentVNodeHooks = {
 }
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
-
+// 组件化
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
@@ -113,12 +113,14 @@ export function createComponent (
   const baseCtor = context.$options._base
 
   // plain options object: turn it into a constructor
+  // 把普通的选项对象转换为构造函数
   if (isObject(Ctor)) {
     Ctor = baseCtor.extend(Ctor)
   }
 
   // if at this stage it's not a constructor or an async component factory,
   // reject.
+  // 如果在此阶段它不是构造函数或异步组件工厂，则拒绝。
   if (typeof Ctor !== 'function') {
     if (process.env.NODE_ENV !== 'production') {
       warn(`Invalid Component definition: ${String(Ctor)}`, context)
@@ -157,14 +159,17 @@ export function createComponent (
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // 将组件v-model数据转换为属性和事件
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
 
   // extract props
+  // 从虚拟dom中提取属性
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
   // functional component
+  // 函数式组件
   if (isTrue(Ctor.options.functional)) {
     return createFunctionalComponent(Ctor, propsData, data, context, children)
   }

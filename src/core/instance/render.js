@@ -87,6 +87,7 @@ export function renderMixin (Vue: Class<Component>) {
       // There's no need to maintain a stack because all render fns are called
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
+      // 没有必要维护一个堆栈，因为所有渲染fns都是分开调用的。调用嵌套组件的渲染fns当父组件被修补时
       currentRenderingInstance = vm
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {

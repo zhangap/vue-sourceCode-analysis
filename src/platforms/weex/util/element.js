@@ -27,7 +27,7 @@ export const isRuntimeComponent = makeMap(
   'richtext,transition,transition-group',
   true
 )
-
+// 一元标签
 export const isUnaryTag = makeMap(
   'embed,img,image,input,link,meta',
   true

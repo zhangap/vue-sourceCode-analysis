@@ -51,6 +51,7 @@ function decodeAttr (value, shouldDecodeNewlines) {
   return value.replace(re, match => decodingMap[match])
 }
 
+// 解析html模板的入口
 export function parseHTML (html, options) {
   const stack = []
   const expectHTML = options.expectHTML
@@ -80,7 +81,7 @@ export function parseHTML (html, options) {
         }
 
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
-        // 判断是否是提交注释，条件注释不会解析成AST语法树
+        // 判断是否是条件注释，条件注释不会解析成AST语法树
         if (conditionalComment.test(html)) {
           const conditionalEnd = html.indexOf(']>')
 
@@ -90,7 +91,7 @@ export function parseHTML (html, options) {
           }
         }
 
-        // Doctype:
+        // Doctype:文档类型节点
         const doctypeMatch = html.match(doctype)
         if (doctypeMatch) {
           advance(doctypeMatch[0].length)
@@ -107,6 +108,7 @@ export function parseHTML (html, options) {
         }
 
         // Start tag:
+        // 找到匹配的开始标签
         const startTagMatch = parseStartTag()
         if (startTagMatch) {
           handleStartTag(startTagMatch)
@@ -234,8 +236,10 @@ export function parseHTML (html, options) {
       }
     }
 
+    // 判断是否是一元标签
     const unary = isUnaryTag(tagName) || !!unarySlash
 
+    // 通过正则、解析标签上的属性名和属性值
     const l = match.attrs.length
     const attrs = new Array(l)
     for (let i = 0; i < l; i++) {

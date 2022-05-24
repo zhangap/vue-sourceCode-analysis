@@ -24,13 +24,17 @@ export class CodegenState {
   constructor (options: CompilerOptions) {
     this.options = options
     this.warn = options.warn || baseWarn
+    // 获取options.modules上的transformCode和genData两个函数
     this.transforms = pluckModuleFunction(options.modules, 'transformCode')
     this.dataGenFns = pluckModuleFunction(options.modules, 'genData')
+    // 指令
     this.directives = extend(extend({}, baseDirectives), options.directives)
+    // 是否是保留标签
     const isReservedTag = options.isReservedTag || no
     this.maybeComponent = (el: ASTElement) => !!el.component || !isReservedTag(el.tag)
     this.onceId = 0
     this.staticRenderFns = []
+    // v-pre的映射，对节点进行标记，是否要跳过这个元素和它的子元素的编译过程，默认是不跳过
     this.pre = false
   }
 }
@@ -105,8 +109,11 @@ function genStatic (el: ASTElement, state: CodegenState): string {
   if (el.pre) {
     state.pre = el.pre
   }
+  // 递归调用genElement，生成相关代码，注意这里设置了staticProcessed=true，在genElement方法中有对el上的staticProcessed
+  // 进行判断，所以才不会陷入死循环
   state.staticRenderFns.push(`with(this){return ${genElement(el, state)}}`)
   state.pre = originalPreState
+  // _m是renderStatic方法的缩写
   return `_m(${
     state.staticRenderFns.length - 1
   }${
